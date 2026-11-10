@@ -1,10 +1,15 @@
-name = "codigo-7"
+name = "live-code"
+main = "src/index.js"
 compatibility_date = "2026-01-01"
-pages_build_output_dir = "public"
 
-# Base de datos D1. Reemplaza database_id por el que te da Cloudflare
-# al crear la base (ver README.md).
+# La página (carpeta public). Las rutas /api/* pasan primero por el Worker.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Base de datos D1. Al no llevar database_id, Cloudflare la crea sola
+# en el primer despliegue y la deja conectada.
 [[d1_databases]]
 binding = "DB"
-database_name = "codigo7"
-database_id = "REEMPLAZAR-CON-TU-DATABASE-ID"
+database_name = "live-code-db"

@@ -17,8 +17,25 @@ function numeroAleatorio(max) {
   return buf[0] % max;
 }
 
-export async function onRequestPost({ request, env }) {
+// Crea la tabla la primera vez, así no hay que ejecutar schema.sql a mano.
+let tablaLista = false;
+async function prepararTabla(db) {
+  if (tablaLista) return;
+  await db.prepare(
+    `CREATE TABLE IF NOT EXISTS registros (
+       id        INTEGER PRIMARY KEY AUTOINCREMENT,
+       nombre    TEXT NOT NULL,
+       celular   TEXT NOT NULL UNIQUE,
+       codigo    TEXT NOT NULL UNIQUE,
+       creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+     )`
+  ).run();
+  tablaLista = true;
+}
+
+async function generarCodigo(request, env) {
   if (!env.DB) return json({ error: "La base de datos no está configurada." }, 500);
+  await prepararTabla(env.DB);
 
   let body;
   try {
@@ -82,4 +99,18 @@ export async function onRequestPost({ request, env }) {
   return json({ error: "Hay mucha demanda en este momento. Intenta de nuevo." }, 503);
 }
 
-export const onRequest = () => json({ error: "Método no permitido." }, 405);
+export default {
+  async fetch(request, env) {
+    const { pathname } = new URL(request.url);
+    if (pathname === "/api/codigo") {
+      if (request.method !== "POST") return json({ error: "Método no permitido." }, 405);
+      try {
+        return await generarCodigo(request, env);
+      } catch {
+        return json({ error: "No se pudo generar el código. Intenta de nuevo." }, 500);
+      }
+    }
+    // Todo lo demás es la página.
+    return env.ASSETS.fetch(request);
+  },
+};
