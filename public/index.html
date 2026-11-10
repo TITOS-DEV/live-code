@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Genera tu código para comprar en el Live</title>
+<style>
+  :root {
+    --fondo: #000000;
+    --tarjeta: #121212;
+    --tinta: #ffffff;
+    --suave: #a8a8ad;
+    --linea: #2a2a2e;
+    --azul: #25f4ee;
+    --rojo: #fe2c55;
+    --error: #ff7a93;
+  }
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(60% 40% at 0% 0%, rgba(37, 244, 238, .16), transparent 70%),
+      radial-gradient(60% 40% at 100% 100%, rgba(254, 44, 85, .18), transparent 70%),
+      var(--fondo);
+    background-attachment: fixed;
+    color: var(--tinta);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+  main {
+    width: 100%;
+    max-width: 420px;
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: -4px -4px 0 var(--azul), 4px 4px 0 var(--rojo);
+  }
+
+  .envivo {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto 16px;
+    align-items: center;
+    gap: 7px;
+    background: var(--rojo);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    padding: 5px 11px;
+    border-radius: 6px;
+  }
+  .envivo::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: latir 1.2s ease-in-out infinite;
+  }
+  @keyframes latir { 50% { opacity: .25; } }
+
+  h1 {
+    font-size: 30px;
+    line-height: 1.12;
+    font-weight: 900;
+    margin: 0 0 10px;
+    text-align: center;
+    letter-spacing: -.02em;
+    text-shadow: -2px -1px 0 var(--azul), 2px 1px 0 var(--rojo);
+  }
+  p.sub { margin: 0 0 24px; text-align: center; color: var(--suave); font-size: 15px; line-height: 1.45; }
+
+  .codigo {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 4px 0 24px;
+  }
+  .digito {
+    width: 62px;
+    height: 80px;
+    border-radius: 12px;
+    background: #000;
+    border: 1.5px solid var(--linea);
+    display: grid;
+    place-items: center;
+    font: 800 42px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: #fff;
+    box-shadow: -3px -3px 0 var(--azul), 3px 3px 0 var(--rojo);
+    animation: caer .35s ease both;
+  }
+  .digito:nth-child(2) { animation-delay: .08s; }
+  .digito:nth-child(3) { animation-delay: .16s; }
+  .digito:nth-child(4) { animation-delay: .24s; }
+  @keyframes caer { from { transform: translateY(-12px); opacity: 0; } }
+
+  label { display: block; font-size: 14px; font-weight: 600; margin: 0 0 6px; }
+  input {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    color: var(--tinta);
+    background: #000;
+    border: 1.5px solid var(--linea);
+    border-radius: 12px;
+    padding: 13px 14px;
+    margin-bottom: 16px;
+  }
+  input::placeholder { color: #77777d; }
+  input:focus { outline: 2px solid var(--azul); outline-offset: 1px; border-color: transparent; }
+  button {
+    width: 100%;
+    font: inherit;
+    font-size: 19px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--rojo);
+    border: 0;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+  }
+  button:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  button:disabled { opacity: .6; cursor: wait; }
+  button.secundario {
+    background: transparent;
+    color: var(--azul);
+    border: 1.5px solid var(--azul);
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  #error { color: var(--error); font-size: 14px; min-height: 20px; margin: 0 0 12px; }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .digito, .envivo::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="envivo">LIVE</div>
+
+  <section id="paso-form">
+    <h1>Genera tu código para comprar en el Live</h1>
+    <p class="sub">Escribe tu nombre y tu celular colombiano. Apenas lo verifiquemos, aparece tu código.</p>
+    <form id="form" novalidate>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="80" required>
+
+      <label for="celular">Número de celular</label>
+      <input id="celular" name="celular" type="tel" inputmode="numeric" autocomplete="tel-national"
+             placeholder="300 123 4567" maxlength="16" required>
+
+      <p id="error" role="alert"></p>
+      <button id="enviar" type="submit">Generar mi código</button>
+    </form>
+  </section>
+
+  <section id="paso-listo" hidden>
+    <h1 id="titulo-listo" tabindex="-1"></h1>
+    <div class="codigo" id="codigo" role="img"></div>
+    <p class="sub" id="texto-listo"></p>
+    <button id="copiar" type="button">Copiar código</button>
+    <button id="otro" type="button" class="secundario">Registrar otra persona</button>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const form = $("form"), error = $("error"), enviar = $("enviar"), cajaCodigo = $("codigo");
+  let codigoActual = "";
+
+  // Acepta 3001234567, +57 300 123 4567 o 57 3001234567.
+  function limpiarCelular(valor) {
+    let d = valor.replace(/\D/g, "");
+    if (d.length === 12 && d.startsWith("57")) d = d.slice(2);
+    return d;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    error.textContent = "";
+    const nombre = $("nombre").value.trim();
+    const celular = limpiarCelular($("celular").value);
+
+    if (nombre.length < 2) { error.textContent = "Escribe tu nombre."; $("nombre").focus(); return; }
+    if (!/^3\d{9}$/.test(celular)) {
+      error.textContent = "Ese no parece un celular colombiano. Deben ser 10 dígitos y empezar por 3.";
+      $("celular").focus();
+      return;
+    }
+
+    enviar.disabled = true;
+    enviar.textContent = "Verificando…";
+    try {
+      const res = await fetch("/api/codigo", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ nombre, celular }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.codigo) throw new Error(data.error || "No se pudo generar el código. Intenta de nuevo.");
+
+      // El código (incluido el 7) solo se dibuja aquí, después de la verificación.
+      codigoActual = data.codigo;
+      cajaCodigo.replaceChildren(...[...codigoActual].map((d) => {
+        const caja = document.createElement("div");
+        caja.className = "digito";
+        caja.textContent = d;
+        return caja;
+      }));
+      cajaCodigo.setAttribute("aria-label", "Tu código es " + [...codigoActual].join(" "));
+      $("titulo-listo").textContent = data.existente ? "Ya tenías tu código" : "¡Listo, " + data.nombre.split(" ")[0] + "!";
+      $("texto-listo").textContent = data.existente
+        ? "Este celular ya estaba registrado. Tu código sigue siendo el mismo."
+        : "Usa este código para comprar en el Live. Quedó asociado a tu celular.";
+      $("paso-form").hidden = true;
+      $("paso-listo").hidden = false;
+      $("titulo-listo").focus();
+    } catch (err) {
+      error.textContent = err instanceof TypeError ? "Sin conexión. Revisa tu internet e intenta de nuevo." : err.message;
+    } finally {
+      enviar.disabled = false;
+      enviar.textContent = "Generar mi código";
+    }
+  });
+
+  $("copiar").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(codigoActual);
+      $("copiar").textContent = "Copiado";
+    } catch {
+      $("copiar").textContent = "Tu código es " + codigoActual;
+    }
+    setTimeout(() => ($("copiar").textContent = "Copiar código"), 2000);
+  });
+
+  $("otro").addEventListener("click", () => {
+    form.reset();
+    codigoActual = "";
+    cajaCodigo.replaceChildren();
+    $("paso-listo").hidden = true;
+    $("paso-form").hidden = false;
+    $("nombre").focus();
+  });
+</script>
+</body>
+</html>

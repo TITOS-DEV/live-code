@@ -1,0 +1,10 @@
+name = "codigo-7"
+compatibility_date = "2026-01-01"
+pages_build_output_dir = "public"
+
+# Base de datos D1. Reemplaza database_id por el que te da Cloudflare
+# al crear la base (ver README.md).
+[[d1_databases]]
+binding = "DB"
+database_name = "codigo7"
+database_id = "REEMPLAZAR-CON-TU-DATABASE-ID"
